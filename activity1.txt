@@ -1,0 +1,92 @@
+Activity 1: Explore PQC Algorithms
+Post‑Quantum Cryptography (PQC) is designed to resist attacks from large‑scale quantum computers. This activity investigates NIST‑standardised post‑quantum signature algorithms and the ML‑KEM key encapsulation mechanism.
+Step 1 ML‑DSA, SLH‑DSA, FN‑DSA Digital Signature Algorithms
+The table below lists all official NIST variants, with key size and signature size measured in bytes.
+Algorithm
+Variant
+Private Key (Bytes)
+Public Key (Bytes)
+Signature Size (Bytes)
+ML␞DSA (Module␞lattice based)
+ML␞DSA␞44 (Security Level 1)
+256
+128
+2420
+ 
+ML␞DSA␞65 (Security Level 3)
+384
+192
+3366
+ 
+ML␞DSA␞87 (Security Level 5)
+512
+256
+4226
+SLH␞DSA (Hash␞based)
+SLH␞DSA␞128s␞shake
+64
+32
+7856
+ 
+SLH␞DSA␞128f␞shake
+64
+32
+17088
+ 
+SLH␞DSA␞192s␞shake
+96
+48
+16224
+ 
+SLH␞DSA␞192f␞shake
+96
+48
+35616
+ 
+SLH␞DSA␞256s␞shake
+128
+64
+29792
+ 
+SLH␞DSA␞256f␞shake
+128
+64
+61088
+FN␞DSA (Falcon␞DSA)(NTRU␞lattice based)
+FN␞DSA␞512 (Security Level 1)
+128
+897
+666
+ 
+FN␞DSA␞1024 (Security Level 5)
+256
+1793
+1280
+Notes:
+For SLH‑DSA: s = small‑signature mode (slow signing, fast verification); f = fast‑sign mode (fast signing, very large signature output).
+ML‑DSA offers balanced performance for general‑purpose digital signatures.
+FN‑DSA produces the shortest signature among three families.
+SLH‑DSA relies only on hash functions and has no mathematical trap‑door structure.
+Step 2 ML‑KEM and comparison with RSA
+What is ML‑KEM
+ML‑KEM (formerly known as Kyber, defined in FIPS 203) is a NIST‑standardised Key Encapsulation Mechanism (KEM) based on the Module Learning‑With‑Errors (MLWE) lattice problem.
+Instead of encrypting arbitrary user‑supplied plaintext, ML‑KEM works with two core functions:
+Encaps (): Sender takes receiver’s public key, generates a random shared secret and a ciphertext.
+Decaps (): Receiver uses its private key and incoming ciphertext to recover exactly the same shared secret.
+This shared secret can then feed into symmetric encryption for secure session key exchange.
+Differences between ML‑KEM and RSA
+Post‑quantum security
+RSA security builds on integer factorisation. A powerful quantum computer running Shor’s algorithm can break RSA completely.
+ML‑KEM is built on the lattice MLWE hard problem, and it remains secure against known quantum‑computer attacks.
+Core working paradigm
+RSA‑OAEP is a public‑key encryption algorithm. Users can directly encrypt arbitrary plaintext data with the public key.
+ML‑KEM is a key encapsulation mechanism. It automatically generates the shared secret internally. It cannot directly encrypt custom message payloads.
+Typical parameter size (Security Level 1)
+RSA‑2048: Public key 256 B, Private key 1218 B, Ciphertext 256 B
+ML‑KEM‑512: Public key 768 B, Private key 1632 B, Ciphertext 768 B
+Computational performance
+ML‑KEM key‑generation, encapsulation and decapsulation are computationally fast, well‑suited for TLS and network‑level key negotiation.
+RSA decryption is comparatively slow, especially for larger key lengths.
+Available usage scope
+RSA supports both data encryption and digital signature (RSA‑PSS).
+ML‑KEM only handles key‑agreement. It cannot perform digital signatures; signing tasks require separate PQC signature families such as ML‑DSA.
